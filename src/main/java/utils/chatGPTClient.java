@@ -14,9 +14,8 @@ import java.net.URL;
 
 public class chatGPTClient {
     private static String url = "https://api.openai.com/v1/chat/completions";
-
-    private static String apiKey = "Your API Key";
-    private static String model="gpt-3.5-turbo-0125";
+    private static String apiKey = "YOUR_API_KEY";
+    private static String model="gpt-3.5-turbo";
 
     public String chatGPTAPICall(String prompt){
 
@@ -24,11 +23,15 @@ public class chatGPTClient {
             URL obj = new URL(url);
             HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
             connection.setRequestMethod("POST");
+
+            //Parameters required by OPENAI API
             connection.setRequestProperty("Authorization", "Bearer " + apiKey);
             connection.setRequestProperty("Content-Type", "application/json");
 
             // The request body
             String body = "{\"model\": \"" + model + "\", \"messages\": [{\"role\": \"user\", \"content\": \"" + prompt + "\"}]}";
+
+            //Remote HTTP connection has to be set for Output as TRUE to send the Request
             connection.setDoOutput(true);
             OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
             writer.write(body);
@@ -37,14 +40,14 @@ public class chatGPTClient {
 
             // Response from ChatGPT
             BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String line;
-
             StringBuffer response = new StringBuffer();
+            String line;
 
             while ((line = br.readLine()) != null) {
                 response.append(line);
             }
             br.close();
+            connection.disconnect();
 
             // calls the method to extract the message.
             return extractMessageFromJSONResponse(response.toString());

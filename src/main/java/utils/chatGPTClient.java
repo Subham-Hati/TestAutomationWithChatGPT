@@ -14,7 +14,7 @@ import java.net.URL;
 
 public class chatGPTClient {
     private static String url = "https://api.openai.com/v1/chat/completions";
-    private static String apiKey = "YOUR_API_KEY";
+    private static String apiKey = "Your API KEY";
     private static String model="gpt-3.5-turbo";
 
     public String chatGPTAPICall(String prompt){
@@ -28,9 +28,16 @@ public class chatGPTClient {
             connection.setRequestProperty("Authorization", "Bearer " + apiKey);
             connection.setRequestProperty("Content-Type", "application/json");
 
+            prompt=prompt.replaceAll("\"","\'");
+            prompt=prompt.replaceAll("\n","");
+            System.out.println(prompt);
             // The request body
-            String body = "{\"model\": \"" + model + "\", \"messages\": [{\"role\": \"user\", \"content\": \"" + prompt + "\"}]}";
+            String body =
+                    "{\"model\": \"" + model
+                            + "\", \"messages\": [{\"role\": \"user\"," +
+                            " \"content\": \"" + prompt + "\"}]}";
 
+            System.out.println(body);
             //Remote HTTP connection has to be set for Output as TRUE to send the Request
             connection.setDoOutput(true);
             OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
@@ -50,7 +57,8 @@ public class chatGPTClient {
             connection.disconnect();
 
             // calls the method to extract the message.
-            return extractMessageFromJSONResponse(response.toString());
+            //return extractMessageFromJSONResponse(response.toString());
+            return response.toString();
 
         } catch (IOException e) {
             throw new RuntimeException(e);

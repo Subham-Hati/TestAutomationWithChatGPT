@@ -6,6 +6,6 @@ import io.cucumber.junit.*;
         glue={"stepsDefinitions"},
 monochrome = true,
 plugin = {"pretty", "html:target/htmlReport"},
-tags = "@ChatGPTAPITest")
+tags = "@ChatGPTAPIDynamicLoginTest")
 public class testRunner {
 }
